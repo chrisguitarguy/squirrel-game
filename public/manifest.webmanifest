@@ -1,0 +1,18 @@
+{
+  "name": "Squirrel Nut Dash",
+  "short_name": "Nut Dash",
+  "description": "A squirrel platformer where you jump tree-to-tree and collect 25 nuts as fast as possible.",
+  "start_url": "/squirrel-game/",
+  "scope": "/squirrel-game/",
+  "display": "standalone",
+  "background_color": "#8fd6ff",
+  "theme_color": "#2f7d4a",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
