@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type Platform = {
   id: number;
@@ -264,6 +264,28 @@ export default function App() {
     lastRef.current = 0;
   };
 
+  const bindControl = (key: "left" | "right" | "jump") => {
+    const activate = (event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      touchRef.current[key] = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    };
+    const release = (event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      touchRef.current[key] = false;
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    };
+
+    return {
+      onPointerDown: activate,
+      onPointerUp: release,
+      onPointerCancel: release,
+      onPointerLeave: release
+    };
+  };
+
   return (
     <div className="app-shell">
       <header className="hud">
@@ -329,62 +351,13 @@ export default function App() {
       <p className="instructions">Use Left/Right + Space (or mobile controls) to jump tree-to-tree, dodge pits, and collect every nut.</p>
 
       <div className="touch-controls" aria-hidden="true">
-        <button
-          onTouchStart={() => {
-            touchRef.current.left = true;
-          }}
-          onTouchEnd={() => {
-            touchRef.current.left = false;
-          }}
-          onMouseDown={() => {
-            touchRef.current.left = true;
-          }}
-          onMouseUp={() => {
-            touchRef.current.left = false;
-          }}
-          onMouseLeave={() => {
-            touchRef.current.left = false;
-          }}
-        >
+        <button {...bindControl("left")}>
           Left
         </button>
-        <button
-          onTouchStart={() => {
-            touchRef.current.right = true;
-          }}
-          onTouchEnd={() => {
-            touchRef.current.right = false;
-          }}
-          onMouseDown={() => {
-            touchRef.current.right = true;
-          }}
-          onMouseUp={() => {
-            touchRef.current.right = false;
-          }}
-          onMouseLeave={() => {
-            touchRef.current.right = false;
-          }}
-        >
+        <button {...bindControl("right")}>
           Right
         </button>
-        <button
-          className="jump"
-          onTouchStart={() => {
-            touchRef.current.jump = true;
-          }}
-          onTouchEnd={() => {
-            touchRef.current.jump = false;
-          }}
-          onMouseDown={() => {
-            touchRef.current.jump = true;
-          }}
-          onMouseUp={() => {
-            touchRef.current.jump = false;
-          }}
-          onMouseLeave={() => {
-            touchRef.current.jump = false;
-          }}
-        >
+        <button className="jump" {...bindControl("jump")}>
           Jump
         </button>
       </div>
