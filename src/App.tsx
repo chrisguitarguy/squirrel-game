@@ -1,4 +1,4 @@
-import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type MouseEvent, type PointerEvent, type TouchEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type Platform = {
   id: number;
@@ -137,6 +137,26 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const clearInput = () => {
+      keysRef.current = { left: false, right: false, jump: false };
+      touchRef.current = { left: false, right: false, jump: false };
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible") {
+        clearInput();
+      }
+    };
+
+    window.addEventListener("blur", clearInput);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("blur", clearInput);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
     let raf = 0;
     const tick = (time: number) => {
       if (!lastRef.current) {
@@ -265,24 +285,58 @@ export default function App() {
   };
 
   const bindControl = (key: "left" | "right" | "jump") => {
-    const activate = (event: PointerEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+    const activate = () => {
       touchRef.current[key] = true;
-      event.currentTarget.setPointerCapture(event.pointerId);
     };
-    const release = (event: PointerEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+
+    const release = () => {
       touchRef.current[key] = false;
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
+    };
+
+    const onPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      activate();
+    };
+
+    const onPointerUp = (event: PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      release();
+    };
+
+    const onTouchStart = (event: TouchEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      activate();
+    };
+
+    const onTouchEnd = (event: TouchEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      release();
+    };
+
+    const onMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      activate();
+    };
+
+    const onMouseUp = (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      release();
     };
 
     return {
-      onPointerDown: activate,
-      onPointerUp: release,
-      onPointerCancel: release,
-      onPointerLeave: release
+      onPointerDown,
+      onPointerUp,
+      onPointerCancel: onPointerUp,
+      onPointerLeave: onPointerUp,
+      onTouchStart,
+      onTouchEnd,
+      onTouchCancel: onTouchEnd,
+      onMouseDown,
+      onMouseUp,
+      onMouseLeave: onMouseUp,
+      onContextMenu: (event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+      }
     };
   };
 
