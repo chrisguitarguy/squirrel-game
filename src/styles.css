@@ -106,8 +106,24 @@ body {
   position: absolute;
   top: 470px;
   height: 70px;
+  overflow: hidden;
   background: linear-gradient(180deg, #17321f 0%, #08140d 100%);
   border-top: 4px solid #2b5538;
+}
+
+.lava {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 22px;
+  background:
+    radial-gradient(circle at 12% 65%, rgb(255 231 160 / 88%) 0 10%, transparent 11%),
+    radial-gradient(circle at 38% 70%, rgb(255 203 120 / 86%) 0 11%, transparent 12%),
+    radial-gradient(circle at 72% 60%, rgb(255 226 145 / 84%) 0 10%, transparent 11%),
+    linear-gradient(180deg, #ffb24d 0%, #ff6f3a 55%, #d53a1f 100%);
+  border-top: 2px solid rgb(255 205 123 / 70%);
+  animation: lavaPulse 1s ease-in-out infinite alternate;
 }
 
 .trunk {
@@ -260,6 +276,17 @@ body {
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+@keyframes lavaPulse {
+  0% {
+    transform: translateY(0);
+    filter: saturate(0.95);
+  }
+  100% {
+    transform: translateY(-2px);
+    filter: saturate(1.15);
   }
 }
 

@@ -300,7 +300,9 @@ export default function App() {
         <div className="world" style={{ transform: `translateX(${-cameraX}px)` }}>
           <div className="ground" />
           {pits.map((pit) => (
-            <div key={pit.id} className="pit" style={{ left: `${pit.x}px`, width: `${pit.width}px` }} />
+            <div key={pit.id} className="pit" style={{ left: `${pit.x}px`, width: `${pit.width}px` }}>
+              <div className="lava" />
+            </div>
           ))}
           {platforms.map((platform) => (
             <div key={`platform-${platform.id}`}>
