@@ -34,6 +34,7 @@ body {
 }
 
 .app-shell {
+  --game-scale: min(1, calc((100vw - 32px) / 980));
   max-width: 1040px;
   margin: 0 auto;
   padding: 18px 16px 28px;
@@ -66,17 +67,24 @@ body {
   padding: 8px 14px;
 }
 
+.game-stage {
+  width: 100%;
+  height: calc(540px * var(--game-scale));
+  overflow: hidden;
+}
+
 .game-view {
   position: relative;
-  width: 100%;
-  max-width: 980px;
-  aspect-ratio: 980 / 540;
+  width: 980px;
+  height: 540px;
   overflow: hidden;
   border-radius: 22px;
   border: 3px solid rgb(45 84 57 / 35%);
   box-shadow: 0 26px 42px rgb(20 44 31 / 18%);
   background:
     linear-gradient(180deg, rgb(178 232 255) 0%, rgb(146 214 162) 65%, rgb(112 178 101) 100%);
+  transform: scale(var(--game-scale));
+  transform-origin: top left;
 }
 
 .world {
@@ -292,6 +300,7 @@ body {
 
 @media (max-width: 900px), (hover: none) and (pointer: coarse) {
   .app-shell {
+    --game-scale: min(1, calc((100vw - 20px) / 980));
     padding: 12px 10px 20px;
   }
 

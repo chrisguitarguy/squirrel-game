@@ -296,58 +296,60 @@ export default function App() {
         </div>
       </header>
 
-      <div className="game-view" role="application" aria-label="Squirrel platform game">
-        <div className="world" style={{ transform: `translateX(${-cameraX}px)` }}>
-          <div className="ground" />
-          {pits.map((pit) => (
-            <div key={pit.id} className="pit" style={{ left: `${pit.x}px`, width: `${pit.width}px` }}>
-              <div className="lava" />
-            </div>
-          ))}
-          {platforms.map((platform) => (
-            <div key={`platform-${platform.id}`}>
-              <div className="trunk" style={{ left: `${platform.x + platform.width / 2 - 14}px`, top: `${TRUNK_Y}px` }} />
-              <div
-                className="canopy"
-                style={{ left: `${platform.x - 24}px`, top: `${platform.y - 30}px`, width: `${platform.width + 48}px` }}
-              />
-              <div
-                className="platform"
-                style={{ left: `${platform.x}px`, top: `${platform.y}px`, width: `${platform.width}px`, height: `${platform.height}px` }}
-              />
-            </div>
-          ))}
+      <div className="game-stage">
+        <div className="game-view" role="application" aria-label="Squirrel platform game">
+          <div className="world" style={{ transform: `translateX(${-cameraX}px)` }}>
+            <div className="ground" />
+            {pits.map((pit) => (
+              <div key={pit.id} className="pit" style={{ left: `${pit.x}px`, width: `${pit.width}px` }}>
+                <div className="lava" />
+              </div>
+            ))}
+            {platforms.map((platform) => (
+              <div key={`platform-${platform.id}`}>
+                <div className="trunk" style={{ left: `${platform.x + platform.width / 2 - 14}px`, top: `${TRUNK_Y}px` }} />
+                <div
+                  className="canopy"
+                  style={{ left: `${platform.x - 24}px`, top: `${platform.y - 30}px`, width: `${platform.width + 48}px` }}
+                />
+                <div
+                  className="platform"
+                  style={{ left: `${platform.x}px`, top: `${platform.y}px`, width: `${platform.width}px`, height: `${platform.height}px` }}
+                />
+              </div>
+            ))}
 
-          {nuts.map(
-            (nut) =>
-              !nut.collected && <div key={nut.id} className="nut" style={{ left: `${nut.x}px`, top: `${nut.y}px` }} aria-label="nut" />
+            {nuts.map(
+              (nut) =>
+                !nut.collected && <div key={nut.id} className="nut" style={{ left: `${nut.x}px`, top: `${nut.y}px` }} aria-label="nut" />
+            )}
+
+            <div className="squirrel" style={{ left: `${player.x}px`, top: `${player.y}px` }}>
+              <span className="tail" />
+              <span className="eye" />
+            </div>
+          </div>
+
+          {won && (
+            <div className="win-panel">
+              <h2>You Win!</h2>
+              <p>
+                You collected all {TARGET_NUTS} nuts in <strong>{formatTime(elapsed)}</strong>.
+              </p>
+              <button onClick={reset}>Play Again</button>
+            </div>
           )}
 
-          <div className="squirrel" style={{ left: `${player.x}px`, top: `${player.y}px` }}>
-            <span className="tail" />
-            <span className="eye" />
-          </div>
+          {dead && !won && (
+            <div className="win-panel lose-panel">
+              <h2>Splat! You Fell In A Pit</h2>
+              <p>
+                You grabbed {collectedCount} nuts before the fall. Time: <strong>{formatTime(elapsed)}</strong>.
+              </p>
+              <button onClick={reset}>Try Again</button>
+            </div>
+          )}
         </div>
-
-        {won && (
-          <div className="win-panel">
-            <h2>You Win!</h2>
-            <p>
-              You collected all {TARGET_NUTS} nuts in <strong>{formatTime(elapsed)}</strong>.
-            </p>
-            <button onClick={reset}>Play Again</button>
-          </div>
-        )}
-
-        {dead && !won && (
-          <div className="win-panel lose-panel">
-            <h2>Splat! You Fell In A Pit</h2>
-            <p>
-              You grabbed {collectedCount} nuts before the fall. Time: <strong>{formatTime(elapsed)}</strong>.
-            </p>
-            <button onClick={reset}>Try Again</button>
-          </div>
-        )}
       </div>
 
       <p className="instructions">Use Left/Right + Space (or mobile controls) to jump tree-to-tree, dodge pits, and collect every nut.</p>
